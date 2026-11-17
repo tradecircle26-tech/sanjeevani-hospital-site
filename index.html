@@ -92,7 +92,11 @@
 </head>
 
 <body>
-    <<div class="top-bar">
+    <div class="top-bar">
+    <div><i class="fa-solid fa-location-dot"></i> यमुना नगर, तलवड़े, पिंपरी-चिंचवड, महाराष्ट्र - 411044</div>
+    <div><span class="emergency-badge"><i class="fa-solid fa-truck-medical"></i> 24/7 इमरजेंसी: +91 96571 42171</span></div>
+</div>
+
     <div><i class="fa-solid fa-location-dot"></i> यमुना नगर, तलवड़े, पिंपरी-चिंचवड, महाराष्ट्र - 411044</div>
     <div><span class="emergency-badge"><i class="fa-solid fa-truck-medical"></i> 24/7 इमरजेंसी: +91 98765 43210</span></div>
 </div>
@@ -301,7 +305,58 @@
             <div class="review-card"><div class="stars">★★★★★</div><p>"डॉ. राजेश शर्मा बहुत ही शांत स्वभाव के हैं और मरीज़ की पूरी बात ध्यान से सुनते हैं। अस्पताल बहुत साफ-सुथरा है।"</p><h4 style="margin-top: 10px;">- सुरेश पाटिल</h4></div>
             <div class="review-card"><div class="stars">★★★★★</div><p>"ऑनलाइन व्हाट्सएप से अपॉइंटमेंट बुक करना बहुत आसान था। हमें बिना ज्यादा इंतजार किए डॉक्टर से मिलने का समय मिल गया।"</p><h4 style="margin-top: 10px;">- नेहा कुलकर्णी</h4></div>
             <div class="review-card"><div class="stars">★★★★★</div><p>"नर्सिंग स्टाफ बहुत मददगार है और प्राइवेट रूम घर जैसा साफ और आरामदायक है।"</p><h4 style="margin-top: 10px;">- मनोज वर्मा</h4></div>
+        </div><section id="contact" style="background: #f1f5f9;">
+    <div class="section-title">
+        <h2>हमारा पता और संपर्क</h2>
+        <p>इमरजेंसी या परामर्श के लिए हमसे सीधे संपर्क करें या अस्पताल आएं</p>
+    </div>
+
+    <div class="contact-grid">
+        <div>
+            <div class="contact-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <h4>अस्पताल का पता</h4>
+                    <p>संजीवनी मल्टीस्पेशलिटी हॉस्पिटल,<br>यमुना नगर, तलवड़े, पिंपरी-चिंचवड,<br>महाराष्ट्र - 411044</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-phone-volume"></i>
+                <div>
+                    <h4>फोन और इमरजेंसी नंबर</h4>
+                    <p>रिसेप्शन एवं अपॉइंटमेंट: +91 96571 42171<br>24/7 इमरजेंसी: +91 96571 42171</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                    <h4>ईमेल पता</h4>
+                    <p>info@sanjeevanihospital.com</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-clock"></i>
+                <div>
+                    <h4>समय (OPD & Emergency)</h4>
+                    <p>OPD: सुबह 10:00 - रात 9:00 बजे तक<br>इमरजेंसी सेवा: 24 घंटे उपलब्ध</p>
+                </div>
+            </div>
         </div>
+
+        <div class="map-container">
+            <iframe 
+                src="https://google.com" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+</section>
+
     </section>
 <section id="contact" style="background: #f1f5f9;">
     <div class="section-title">
@@ -395,4 +450,48 @@
         }
     </script>
 </body>
+</html><!-- नीचे दाईं ओर दिखने वाले फ्लोटिंग WhatsApp और Call बटन -->
+<div class="floating-actions">
+    <a href="https://wa.me्ते%20संजीवनी%20हॉस्पिटल,%20मुझे%20जानकारी%20चाहिए।" target="_blank" class="float-btn float-wa" title="WhatsApp पर बात करें">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    <a href="tel:+919657142171" class="float-btn float-call" title="सीधे कॉल करें">
+        <i class="fa-solid fa-phone"></i>
+    </a>
+</div>
+
+<footer>
+    <p>&copy; 2026 संजीवनी मल्टीस्पेशलिटी हॉस्पिटल, यमुना नगर, तलवड़े। सर्वाधिकार सुरक्षित।</p>
+</footer>
+
+<!-- WhatsApp पर अपॉइंटमेंट भेजने का कोड -->
+<script>
+    function sendToWhatsApp(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('patientName').value;
+        const age = document.getElementById('patientAge').value;
+        const phone = document.getElementById('patientPhone').value;
+        const doctor = document.getElementById('doctorSelect').value;
+        const date = document.getElementById('appointmentDate').value;
+        const slot = document.getElementById('timeSlot').value;
+        const issue = document.getElementById('healthIssue').value || "कोई विशेष विवरण नहीं";
+
+        const message = `*नया अपॉइंटमेंट अनुरोध - संजीवनी हॉस्पिटल*%0A%0A` +
+                        `*मरीज़ का नाम:* ${name}%0A` +
+                        `*उम्र:* ${age} वर्ष%0A` +
+                        `*मोबाइल नंबर:* ${phone}%0A` +
+                        `*डॉक्टर:* ${doctor}%0A` +
+                        `*तारीख:* ${date}%0A` +
+                        `*टाइम स्लॉट:* ${slot}%0A` +
+                        `*समस्या/विवरण:* ${issue}`;
+
+        const whatsappNumber = "919657142171";
+        const whatsappURL = `https://wa.me{whatsappNumber}?text=${message}`;
+
+        window.open(whatsappURL, '_blank');
+    }
+</script>
+</body>
 </html>
+
