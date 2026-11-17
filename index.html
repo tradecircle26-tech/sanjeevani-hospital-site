@@ -126,6 +126,235 @@
             </div>
         </div>
     </section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Facilities Section</title>
+  <!-- Google Fonts for Heading and Body -->
+  <link href="https://googleapis.com" rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cloudflare.com">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+      color: #1f2937;
+    }
+
+    .facilities-section {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 70px 24px;
+    }
+
+    /* Top Tagline */
+    .section-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #9b3b48;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-tag::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 2px;
+      background-color: #2e8b57;
+    }
+
+    /* Main Heading */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1a1a1a;
+      max-width: 550px;
+      margin-bottom: 56px;
+    }
+
+    /* 3-Column Grid */
+    .facilities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px 40px;
+    }
+
+    .facility-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    /* Green Icon Box */
+    .icon-box {
+      width: 44px;
+      height: 44px;
+      background-color: #15804d;
+      color: #ffffff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 18px;
+    }
+
+    .facility-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .facility-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #6b7280;
+    }
+
+    /* Floating Call Button (Bottom Right) */
+    .floating-call-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 52px;
+      height: 52px;
+      background-color: #a63a49;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+      z-index: 1000;
+    }
+
+    .floating-call-btn:hover {
+      transform: scale(1.08);
+    }
+
+    /* Mobile & Tablet Responsive */
+    @media (max-width: 900px) {
+      .facilities-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section-title {
+        font-size: 30px;
+      }
+      .facilities-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="facilities-section">
+    <div class="section-tag">FACILITIES</div>
+    <h2 class="section-title">Everything a critical case needs, on one campus</h2>
+
+    <div class="facilities-grid">
+      <!-- Card 1 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-truck-medical"></i>
+        </div>
+        <h3>Emergency &amp; Ambulance</h3>
+        <p>Round-the-clock trauma and accident care, backed by an on-call ambulance.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-bed-pulse"></i>
+        </div>
+        <h3>ICU &amp; Modular OTs</h3>
+        <p>Fully-equipped intensive care unit and operation theatres for surgical and critical cases.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-prescription-bottle-medical"></i>
+        </div>
+        <h3>24x7 In-house Pharmacy</h3>
+        <p>Round-the-clock medicine access, with most insurance companies accepted.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-flask"></i>
+        </div>
+        <h3>Lab &amp; Pathology</h3>
+        <p>Blood transfusion, clinical biochemistry, microbiology, histopathology &amp; more, on-site.</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-x-ray"></i>
+        </div>
+        <h3>Digital X-Ray &amp; Imaging</h3>
+        <p>On-site digital radiology for faster diagnosis, no need to travel elsewhere.</p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+        <h3>Physiotherapy</h3>
+        <p>Rehabilitation for sports injuries, joint replacement and spine surgery recovery.</p>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3>Cashless Insurance</h3>
+        <p>Tie-ups with most major insurance companies for stress-free, upfront-payment-free treatment.</p>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="facility-card">
+        <div class="icon-box">
+          <i class="fa-solid fa-child"></i>
+        </div>
+        <h3>Children's Clinic</h3>
+        <p>OPD, well-baby guidance, vaccination and immunization for your little ones.</p>
+      </div>
+    </div>
+  </section>
+
+ 
+
+</body>
+</html>
 
     <section id="about">
         <div class="section-title">
