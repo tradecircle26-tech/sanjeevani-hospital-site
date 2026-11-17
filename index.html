@@ -230,3 +230,231 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Best Treatment Section</title>
+  <!-- Google Fonts -->
+  <link href="https://googleapis.com" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cloudflare.com">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #ffffff;
+      color: #0b2239;
+    }
+
+    .treatments-section {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    /* Subheading */
+    .treatments-subtitle {
+      color: #c83737;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Main Heading */
+    .treatments-title {
+      color: #0b2239;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.3;
+      max-width: 600px;
+      margin: 0 auto 44px auto;
+    }
+
+    /* Flexbox Grid for Centered Bottom Row */
+    .treatments-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    /* Individual Card Styling (6 cards per row on desktop) */
+    .treatment-card {
+      width: calc((100% - (18px * 5)) / 6);
+      min-height: 155px;
+      border-radius: 10px;
+      padding: 24px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .treatment-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Light Blue Card Theme (Row 1 & Row 3) */
+    .card-blue {
+      background-color: #dcf0fa;
+      color: #0b2239;
+    }
+
+    .card-blue .card-icon {
+      color: #0c5996;
+    }
+
+    /* Light Pink Card Theme (Row 2) */
+    .card-pink {
+      background-color: #fce4e6;
+      color: #1c191a;
+    }
+
+    .card-pink .card-icon {
+      color: #e66a6a;
+    }
+
+    /* Icon Sizing */
+    .card-icon {
+      font-size: 30px;
+      margin-bottom: 16px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Card Text */
+    .treatment-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* Tablet Responsive (3 cards per row) */
+    @media (max-width: 992px) {
+      .treatment-card {
+        width: calc((100% - (18px * 2)) / 3);
+      }
+    }
+
+    /* Mobile Responsive (2 cards per row) */
+    @media (max-width: 576px) {
+      .treatments-title {
+        font-size: 24px;
+      }
+      .treatment-card {
+        width: calc((100% - 18px) / 2);
+        min-height: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="treatments-section">
+    <p class="treatments-subtitle">Our Best Treatment</p>
+    <h2 class="treatments-title">Experience Excellence In Specialized<br>Medical Care</h2>
+
+    <div class="treatments-grid">
+      <!-- Row 1: Blue Cards -->
+      <a href="#cardiology" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h3>Cardiology</h3>
+      </a>
+
+      <a href="#general-medicine" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-pills"></i></div>
+        <h3>General<br>Medicine</h3>
+      </a>
+
+      <a href="#obstetrics" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-baby"></i></div>
+        <h3>Obstetrics &amp;<br>Gynaecology</h3>
+      </a>
+
+      <a href="#general-surgery" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-stethoscope"></i></div>
+        <h3>General Surgery</h3>
+      </a>
+
+      <a href="#radiology" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-radiation"></i></div>
+        <h3>Interventional<br>Radiology</h3>
+      </a>
+
+      <a href="#stress-test" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-virus-covid"></i></div>
+        <h3>Stress Test</h3>
+      </a>
+
+      <!-- Row 2: Pink Cards -->
+      <a href="#neurology" class="treatment-card card-pink">
+        <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
+        <h3>Neurology &amp;<br>Neurosurgery</h3>
+      </a>
+
+      <a href="#nephrology" class="treatment-card card-pink">
+        <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
+        <h3>Nephrology &amp;<br>Dialysis</h3>
+      </a>
+
+      <a href="#pediatrics" class="treatment-card card-pink">
+        <div class="card-icon"><i class="fa-solid fa-syringe"></i></div>
+        <h3>Pediatrics &amp;<br>NICU</h3>
+      </a>
+
+      <a href="#urology" class="treatment-card card-pink">
+        <div class="card-icon"><i class="fa-solid fa-microscope"></i></div>
+        <h3>Urology &amp; Uro-<br>Surgery</h3>
+      </a>
+
+      <a href="#oncology" class="treatment-card card-pink">
+        <div class="card-icon"><i class="fa-solid fa-ribbon"></i></div>
+        <h3>Oncology &amp;<br>cancer surgery</h3>
+      </a>
+
+      <a href="#orthopaedic" class="treatment-card card-pink">
+        <div class="card-icon"><i class="fa-solid fa-bone"></i></div>
+        <h3>Orthopaedic &amp;<br>Joint<br>Replacement</h3>
+      </a>
+
+      <!-- Row 3: Centered Blue Cards -->
+      <a href="#gastrointestinal" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-dna"></i></div>
+        <h3>Gastrointestinal<br>Endoscopy</h3>
+      </a>
+
+      <a href="#blood-storage" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-flask"></i></div>
+        <h3>Blood Storage<br>Centre</h3>
+      </a>
+
+      <a href="#physiotherapy" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-person-walking"></i></div>
+        <h3>Physiotherapy</h3>
+      </a>
+
+      <a href="#echo-scan" class="treatment-card card-blue">
+        <div class="card-icon"><i class="fa-solid fa-x-ray"></i></div>
+        <h3>2D Echo &amp; 3D<br>Scan</h3>
+      </a>
+    </div>
+  </section>
+
+</body>
+</html>
