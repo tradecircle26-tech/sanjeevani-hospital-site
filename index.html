@@ -1,1275 +1,390 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doctor Profile with Appointment Popup</title>
-  <link href="https://googleapis.com" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      /* स्टैंडर्ड सॉफ्ट मेडिकल बैकग्राउंड कलर */
-      background-color: #f4f7fb;
-      color: #374151;
-    }
-
-    .doctor-profile-section {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 60px 24px;
-    }
-
-    /* सफ़ेद प्रीमियम कार्ड कंटेनर */
-    .doctor-card {
-      background: linear-gradient(145deg, #ffffff 0%, #fafcff 100%);
-      border: 1px solid #e2e8f0;
-      border-top: 4px solid #153e6c;
-      border-radius: 14px;
-      padding: 36px;
-      box-shadow: 0 12px 30px rgba(21, 62, 108, 0.06);
-      display: flex;
-      align-items: flex-start;
-      gap: 44px;
-    }
-
-    /* Left Side Image */
-    .doctor-image-box {
-      flex: 0 0 380px;
-      max-width: 100%;
-    }
-
-    .doctor-image-box img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 10px;
-      object-fit: cover;
-      background-color: #e2e8f0;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Right Side Details */
-    .doctor-info-box {
-      flex: 1;
-      width: 100%;
-    }
-
-    .doctor-name {
-      font-size: 32px;
-      font-weight: 700;
-      color: #163b65;
-      margin-bottom: 6px;
-      line-height: 1.2;
-    }
-
-    .doctor-degree {
-      font-size: 14px;
-      font-weight: 600;
-      color: #64748b;
-      margin-bottom: 12px;
-    }
-
-    .location-badge {
-      display: inline-block;
-      background-color: #e6eef8;
-      color: #153e6c;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-      margin-bottom: 22px;
-    }
-
-    /* Details List Table */
-    .doctor-details-list {
-      width: 100%;
-      margin-bottom: 28px;
-      background-color: #f8fafc;
-      padding: 8px 18px;
-      border-radius: 8px;
-      border: 1px solid #edf2f7;
-    }
-
-    .detail-row {
-      display: flex;
-      align-items: center;
-      padding: 11px 0;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 13.5px;
-    }
-
-    .detail-row:last-child {
-      border-bottom: none;
-    }
-
-    .detail-label {
-      width: 165px;
-      font-weight: 600;
-      color: #334155;
-      flex-shrink: 0;
-    }
-
-    .detail-value {
-      color: #475569;
-      font-weight: 400;
-    }
-
-    .detail-value a {
-      color: #153e6c;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .detail-value a:hover {
-      text-decoration: underline;
-    }
-
-    /* Buttons */
-    .action-buttons {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background-color: #153e6c;
-      color: #ffffff;
-      border: 1px solid #153e6c;
-      padding: 11px 26px;
-      font-size: 13.5px;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: inherit;
-      box-shadow: 0 4px 10px rgba(21, 62, 108, 0.18);
-      transition: all 0.2s ease;
-    }
-
-    .btn-primary:hover {
-      background-color: #0f2d4f;
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background-color: #ffffff;
-      color: #153e6c;
-      border: 1px solid #cbd5e1;
-      padding: 11px 26px;
-      font-size: 13.5px;
-      font-weight: 600;
-      border-radius: 6px;
-      text-decoration: none;
-      display: inline-block;
-      transition: all 0.2s ease;
-    }
-
-    .btn-outline:hover {
-      border-color: #153e6c;
-      background-color: #f1f5f9;
-    }
-
-    /* Popup Modal Styles */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(3px);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-box {
-      background-color: #ffffff;
-      width: 100%;
-      max-width: 460px;
-      border-radius: 12px;
-      border-top: 4px solid #153e6c;
-      padding: 28px;
-      position: relative;
-      box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.25s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 18px;
-      background: #f1f5f9;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-size: 20px;
-      color: #475569;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-    }
-
-    .modal-close:hover {
-      background-color: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .modal-title {
-      font-size: 21px;
-      font-weight: 700;
-      color: #163b65;
-      margin-bottom: 4px;
-    }
-
-    .modal-subtitle {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-      text-align: left;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px 12px;
-      background-color: #f8fafc;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 13.5px;
-      font-family: inherit;
-      color: #1e293b;
-      transition: all 0.2s ease;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      background-color: #ffffff;
-      border-color: #153e6c;
-      box-shadow: 0 0 0 3px rgba(21, 62, 108, 0.1);
-    }
-
-    .form-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .form-row .form-group {
-      flex: 1;
-    }
-
-    .btn-submit {
-      width: 100%;
-      background-color: #153e6c;
-      color: #ffffff;
-      border: none;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 6px;
-      box-shadow: 0 4px 10px rgba(21, 62, 108, 0.18);
-      transition: background-color 0.2s ease;
-    }
-
-    .btn-submit:hover {
-      background-color: #0f2d4f;
-    }
-
-    .success-message {
-      display: none;
-      text-align: center;
-      padding: 20px 10px;
-    }
-
-    .success-message h4 {
-      color: #15804d;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .success-message p {
-      font-size: 13.5px;
-      color: #475569;
-      margin-bottom: 18px;
-    }
-
-    /* Mobile & Tablet Responsive */
-    @media (max-width: 820px) {
-      .doctor-card {
-        flex-direction: column;
-        padding: 24px;
-        gap: 24px;
-      }
-
-      .doctor-image-box {
-        flex: none;
-        width: 100%;
-      }
-
-      .doctor-name {
-        font-size: 26px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .detail-label {
-        width: 130px;
-      }
-      .form-row {
-        flex-direction: column;
-        gap: 0;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <section class="doctor-profile-section">
-    <div class="doctor-card">
-      <!-- Left: Doctor Photo -->
-      <div class="doctor-image-box">
-        <img src="doctor-photo.jpg" alt="Dr. Rahul Gaikawd">
-      </div>
-
-      <!-- Right: Doctor Details -->
-      <div class="doctor-info-box">
-        <h1 class="doctor-name">Dr. Rahul Gaikawd</h1>
-        <p class="doctor-degree">MBBS</p>
-        <span class="location-badge">📍 Pimpri-Chinchwad</span>
-
-        <div class="doctor-details-list">
-          <div class="detail-row">
-            <div class="detail-label">Speciality</div>
-            <div class="detail-value">General Medicine</div>
-          </div>
-
-          <div class="detail-row">
-            <div class="detail-label">Education</div>
-            <div class="detail-value">MBBS</div>
-          </div>
-
-          <div class="detail-row">
-            <div class="detail-label">Experience</div>
-            <div class="detail-value">14 years</div>
-          </div>
-
-          <div class="detail-row">
-            <div class="detail-label">Mobile</div>
-            <div class="detail-value"><a href="tel:9421407731">9421407731</a></div>
-          </div>
-
-          <div class="detail-row">
-            <div class="detail-label">Memberships</div>
-            <div class="detail-value">Government Medical College.</div>
-          </div>
-
-          <div class="detail-row">
-            <div class="detail-label">Registration No</div>
-            <div class="detail-value">908/99</div>
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button type="button" class="btn-primary" onclick="openModal()">Book Appointment</button>
-          <a href="#view-details" class="btn-outline">View Details</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Appointment Popup Modal -->
-  <div class="modal-overlay" id="appointmentModal" onclick="closeModalOnOutsideClick(event)">
-    <div class="modal-box">
-      <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
-      
-      <div id="formContainer">
-        <h3 class="modal-title">Book an Appointment</h3>
-        <p class="modal-subtitle">Consultation with <strong>Dr. Rahul Gaikawd</strong> (General Medicine)</p>
-
-        <form id="bookingForm" onsubmit="submitAppointment(event)">
-          <div class="form-group">
-            <label for="patientName">Patient Name *</label>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Expert Doctors Section (4 Doctors)</title>
-  <!-- Google Fonts -->
-  <link href="https://googleapis.com" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #f4f7fb;
-      color: #1e293b;
-    }
-
-    .doctors-section {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 64px 20px;
-    }
-
-    /* Section Header */
-    .section-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .section-heading {
-      font-size: 28px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-      color: #0f172a;
-    }
-
-    .section-heading span {
-      color: #21528c;
-    }
-
-    .section-subtitle {
-      font-size: 14px;
-      color: #64748b;
-      font-weight: 400;
-    }
-
-    /* 2x2 Grid for 4 Doctors */
-    .doctors-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 36px 26px;
-    }
-
-    /* Doctor Card */
-    .doctor-card {
-      position: relative;
-      background-color: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 26px 24px;
-      min-height: 215px;
-      display: flex;
-      align-items: flex-start;
-      gap: 22px;
-      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .doctor-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 26px rgba(33, 82, 140, 0.08);
-    }
-
-    /* Top Right Orange Specialty Pill */
-    .specialty-badge {
-      position: absolute;
-      top: -15px;
-      right: 24px;
-      background-color: #f6b343;
-      color: #1e293b;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 7px 18px;
-      border-radius: 20px;
-      box-shadow: 0 3px 8px rgba(246, 179, 67, 0.3);
-    }
-
-    /* Doctor Photo / Placeholder Box */
-    .doc-avatar {
-      width: 96px;
-      height: 118px;
-      border-radius: 10px;
-      overflow: hidden;
-      flex-shrink: 0;
-      background-color: #e2e8f0;
-      border: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .doc-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .doc-avatar svg {
-      width: 68px;
-      height: 68px;
-      fill: #cbd5e1;
-      margin-top: 16px;
-    }
-
-    /* Doctor Info */
-    .doc-details {
-      flex: 1;
-      padding-top: 4px;
-    }
-
-    .doc-name {
-      font-size: 16.5px;
-      font-weight: 700;
-      color: #21528c;
-      margin-bottom: 12px;
-    }
-
-    .doc-meta-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 12.5px;
-      color: #475569;
-      margin-bottom: 9px;
-      line-height: 1.45;
-    }
-
-    .doc-meta-item svg {
-      width: 14px;
-      height: 14px;
-      fill: #0f172a;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    /* Book Now Pill Button */
-    .btn-book-now {
-      display: inline-block;
-      margin-top: 12px;
-      background-color: #29568f;
-      color: #ffffff;
-      border: none;
-      padding: 9px 22px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      border-radius: 25px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .btn-book-now:hover {
-      background-color: #1c3f6e;
-      transform: scale(1.03);
-    }
-
-    /* Floating Chat Icon (Bottom Right) */
-    .floating-chat-btn {
-      position: fixed;
-      bottom: 22px;
-      right: 22px;
-      width: 50px;
-      height: 50px;
-      background-color: #5469b4;
-      color: #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      box-shadow: 0 6px 16px rgba(84, 105, 180, 0.35);
-      z-index: 999;
-      transition: transform 0.2s ease;
-    }
-
-    .floating-chat-btn:hover {
-      transform: scale(1.08);
-    }
-
-    .floating-chat-btn svg {
-      width: 24px;
-      height: 24px;
-      fill: #ffffff;
-    }
-
-    /* Popup Modal for Booking */
-    .booking-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(2px);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .booking-modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: #ffffff;
-      width: 100%;
-      max-width: 420px;
-      border-radius: 14px;
-      padding: 26px;
-      position: relative;
-      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      background: #f1f5f9;
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      color: #475569;
-    }
-
-    .modal-content h3 {
-      font-size: 19px;
-      color: #21528c;
-      margin-bottom: 4px;
-    }
-
-    .modal-content p {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 18px;
-    }
-
-    .input-group {
-      margin-bottom: 12px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 5px;
-      color: #334155;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 13px;
-      font-family: inherit;
-    }
-
-    .submit-booking {
-      width: 100%;
-      background-color: #29568f;
-      color: #ffffff;
-      border: none;
-      padding: 11px;
-      border-radius: 25px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    /* Mobile & Tablet Responsive */
-    @media (max-width: 820px) {
-      .doctors-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .section-heading {
-        font-size: 22px;
-      }
-      .doctor-card {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding-top: 32px;
-      }
-      .doc-meta-item {
-        justify-content: center;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <section class="doctors-section">
-    <div class="section-header">
-      <h2 class="section-heading"><span>YOUR HEALTH,</span> IN EXPERT HANDS</h2>
-      <p class="section-subtitle">Skilled. Experienced. Empathetic. Get to know the people behind your care.</p>
-    </div>
-
-    <div class="doctors-grid">
-      <!-- Card 1: Dr. Amol Misal -->
-      <div class="doctor-card">
-        <span class="specialty-badge">Medicine</span>
-        <div class="doc-avatar">
-          <img src="dr-amol-misal.jpg" alt="Dr. Amol Misal">
-        </div>
-        <div class="doc-details">
-          <h3 class="doc-name">Dr. Amol Misal</h3>
-          <div class="doc-meta-item">
-            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-4 12.74V22l4-2 4 2v-7.26A7 7 0 0 0 12 2zm0 10a3 3 0 1 1 3-3 3 3 0 0 1-3 3z"/></svg>
-            <span>16 Years of Experience</span>
-          </div>
-          <div class="doc-meta-item">
-            <svg viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
-            <span>M.B.B.S, DNB</span>
-          </div>
-          <button type="button" class="btn-book-now" onclick="openBooking('Dr. Amol Misal')">BOOK NOW</button>
-        </div>
-      </div>
-
-      <!-- Card 2: Dr. Ajinkya Borhade -->
-      <div class="doctor-card">
-        <span class="specialty-badge">Cardiology</span>
-        <div class="doc-avatar">
-          <img src="dr-ajinkya-borhade.jpg" alt="Dr. Ajinkya Borhade">
-        </div>
-        <div class="doc-details">
-          <h3 class="doc-name">Dr. Ajinkya Borhade</h3>
-          <div class="doc-meta-item">
-            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-4 12.74V22l4-2 4 2v-7.26A7 7 0 0 0 12 2zm0 10a3 3 0 1 1 3-3 3 3 0 0 1-3 3z"/></svg>
-            <span>13 Years of Experience</span>
-          </div>
-          <div class="doc-meta-item">
-            <svg viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
-            <span>MBBS, PGDEM, DNB (Internal Medicine ),<br>DM Cardiology</span>
-          </div>
-          <button type="button" class="btn-book-now" onclick="openBooking('Dr. Ajinkya Borhade')">BOOK NOW</button>
-        </div>
-      </div>
-
-      <!-- Card 3: Dr. Saurabh Vijay Giri -->
-      <div class="doctor-card">
-        <span class="specialty-badge">Orthopedics</span>
-        <div class="doc-avatar">
-          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-        </div>
-        <div class="doc-details">
-          <h3 class="doc-name">Dr. Saurabh Vijay Giri</h3>
-          <div class="doc-meta-item">
-            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-4 12.74V22l4-2 4 2v-7.26A7 7 0 0 0 12 2zm0 10a3 3 0 1 1 3-3 3 3 0 0 1-3 3z"/></svg>
-            <span>16 Years of Experience</span>
-          </div>
-          <div class="doc-meta-item">
-            <svg viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hospital Facilities Section</title>
-  <!-- Google Fonts for Heading and Body -->
-  <link href="https://googleapis.com" rel="stylesheet">
-  
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f9fa;
-      color: #1f2937;
-    }
-
-    .facilities-section {
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 70px 24px;
-    }
-
-    /* Top Tagline */
-    .section-tag {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: #9b3b48;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .section-tag::before {
-      content: "";
-      display: inline-block;
-      width: 24px;
-      height: 2px;
-      background-color: #2e8b57;
-    }
-
-    /* Main Heading */
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 40px;
-      font-weight: 700;
-      line-height: 1.25;
-      color: #1a1a1a;
-      max-width: 550px;
-      margin-bottom: 56px;
-    }
-
-    /* 3-Column Grid */
-    .facilities-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 48px 40px;
-    }
-
-    .facility-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    /* Green Icon Box */
-    .icon-box {
-      width: 44px;
-      height: 44px;
-      background-color: #15804d;
-      color: #ffffff;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-    }
-
-    .icon-box svg {
-      width: 22px;
-      height: 22px;
-    }
-
-    .facility-card h3 {
-      font-size: 17px;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 10px;
-    }
-
-    .facility-card p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #6b7280;
-    }
-
-    /* Floating Call Button (Bottom Right) */
-    .floating-call-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 52px;
-      height: 52px;
-      background-color: #a63a49;
-      color: #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s ease;
-      z-index: 1000;
-    }
-
-    .floating-call-btn svg {
-      width: 22px;
-      height: 22px;
-    }
-
-    .floating-call-btn:hover {
-      transform: scale(1.08);
-    }
-
-    /* Mobile & Tablet Responsive */
-    @media (max-width: 900px) {
-      .facilities-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .section-title {
-        font-size: 30px;
-      }
-      .facilities-grid {
-        grid-template-columns: 1fr;
-        gap: 36px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <section class="facilities-section">
-    <div class="section-tag">FACILITIES</div>
-    <h2 class="section-title">Everything a critical case needs, on one campus</h2>
-
-    <div class="facilities-grid">
-      <!-- Card 1: Emergency & Ambulance -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10H6"/><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.684-.948l-1.923-.641a1 1 0 0 1-.578-.502l-1.539-3.076A1 1 0 0 0 16.382 8H14"/><path d="M8 8v4"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
-        </div>
-        <h3>Emergency &amp; Ambulance</h3>
-        <p>Round-the-clock trauma and accident care, backed by an on-call ambulance.</p>
-      </div>
-
-      <!-- Card 2: ICU & Modular OTs -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
-        </div>
-        <h3>ICU &amp; Modular OTs</h3>
-        <p>Fully-equipped intensive care unit and operation theatres for surgical and critical cases.</p>
-      </div>
-
-      <!-- Card 3: 24x7 In-house Pharmacy -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
-        </div>
-        <h3>24x7 In-house Pharmacy</h3>
-        <p>Round-the-clock medicine access, with most insurance companies accepted.</p>
-      </div>
-
-      <!-- Card 4: Lab & Pathology -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 9h4"/><path d="M10 3v6l-4 11a2 2 0 0 0 1.8 2.8h8.4a2 2 0 0 0 1.8-2.8L14 9V3"/></svg>
-        </div>
-        <h3>Lab &amp; Pathology</h3>
-        <p>Blood transfusion, clinical biochemistry, microbiology, histopathology &amp; more, on-site.</p>
-      </div>
-
-      <!-- Card 5: Digital X-Ray & Imaging -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/><path d="M12 6v12"/></svg>
-        </div>
-        <h3>Digital X-Ray &amp; Imaging</h3>
-        <p>On-site digital radiology for faster diagnosis, no need to travel elsewhere.</p>
-      </div>
-
-      <!-- Card 6: Physiotherapy -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
-        </div>
-        <h3>Physiotherapy</h3>
-        <p>Rehabilitation for sports injuries, joint replacement and spine surgery recovery.</p>
-      </div>
-
-      <!-- Card 7: Cashless Insurance -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-        </div>
-        <h3>Cashless Insurance</h3>
-        <p>Tie-ups with most major insurance companies for stress-free, upfront-payment-free treatment.</p>
-      </div>
-
-      <!-- Card 8: Children's Clinic -->
-      <div class="facility-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>
-        </div>
-        <h3>Children's Clinic</h3>
-        <p>OPD, well-baby guidance, vaccination and immunization for your little ones.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Floating Phone Icon -->
-  <a href="tel:+910000000000" class="floating-call-btn" aria-label="Call Us">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-  </a>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Best Treatment Section</title>
-  <!-- Google Fonts -->
-  <link href="https://googleapis.com" rel="stylesheet">
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cloudflare.com">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #ffffff;
-      color: #0b2239;
-    }
-
-    .treatments-section {
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    /* Subheading */
-    .treatments-subtitle {
-      color: #c83737;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: 0.3px;
-    }
-
-    /* Main Heading */
-    .treatments-title {
-      color: #0b2239;
-      font-size: 32px;
-      font-weight: 800;
-      line-height: 1.3;
-      max-width: 600px;
-      margin: 0 auto 44px auto;
-    }
-
-    /* Flexbox Grid for Centered Bottom Row */
-    .treatments-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-    }
-
-    /* Individual Card Styling (6 cards per row on desktop) */
-    .treatment-card {
-      width: calc((100% - (18px * 5)) / 6);
-      min-height: 155px;
-      border-radius: 10px;
-      padding: 24px 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .treatment-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    /* Light Blue Card Theme (Row 1 & Row 3) */
-    .card-blue {
-      background-color: #dcf0fa;
-      color: #0b2239;
-    }
-
-    .card-blue .card-icon {
-      color: #0c5996;
-    }
-
-    /* Light Pink Card Theme (Row 2) */
-    .card-pink {
-      background-color: #fce4e6;
-      color: #1c191a;
-    }
-
-    .card-pink .card-icon {
-      color: #e66a6a;
-    }
-
-    /* Icon Sizing */
-    .card-icon {
-      font-size: 30px;
-      margin-bottom: 16px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Card Text */
-    .treatment-card h3 {
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.4;
-      text-align: center;
-    }
-
-    /* Tablet Responsive (3 cards per row) */
-    @media (max-width: 992px) {
-      .treatment-card {
-        width: calc((100% - (18px * 2)) / 3);
-      }
-    }
-
-    /* Mobile Responsive (2 cards per row) */
-    @media (max-width: 576px) {
-      .treatments-title {
-        font-size: 24px;
-      }
-      .treatment-card {
-        width: calc((100% - 18px) / 2);
-        min-height: 140px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <section class="treatments-section">
-    <p class="treatments-subtitle">Our Best Treatment</p>
-    <h2 class="treatments-title">Experience Excellence In Specialized<br>Medical Care</h2>
-
-    <div class="treatments-grid">
-      <!-- Row 1: Blue Cards -->
-      <a href="#cardiology" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-        <h3>Cardiology</h3>
-      </a>
-
-      <a href="#general-medicine" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-pills"></i></div>
-        <h3>General<br>Medicine</h3>
-      </a>
-
-      <a href="#obstetrics" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-baby"></i></div>
-        <h3>Obstetrics &amp;<br>Gynaecology</h3>
-      </a>
-
-      <a href="#general-surgery" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-stethoscope"></i></div>
-        <h3>General Surgery</h3>
-      </a>
-
-      <a href="#radiology" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-radiation"></i></div>
-        <h3>Interventional<br>Radiology</h3>
-      </a>
-
-      <a href="#stress-test" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-virus-covid"></i></div>
-        <h3>Stress Test</h3>
-      </a>
-
-      <!-- Row 2: Pink Cards -->
-      <a href="#neurology" class="treatment-card card-pink">
-        <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
-        <h3>Neurology &amp;<br>Neurosurgery</h3>
-      </a>
-
-      <a href="#nephrology" class="treatment-card card-pink">
-        <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
-        <h3>Nephrology &amp;<br>Dialysis</h3>
-      </a>
-
-      <a href="#pediatrics" class="treatment-card card-pink">
-        <div class="card-icon"><i class="fa-solid fa-syringe"></i></div>
-        <h3>Pediatrics &amp;<br>NICU</h3>
-      </a>
-
-      <a href="#urology" class="treatment-card card-pink">
-        <div class="card-icon"><i class="fa-solid fa-microscope"></i></div>
-        <h3>Urology &amp; Uro-<br>Surgery</h3>
-      </a>
-
-      <a href="#oncology" class="treatment-card card-pink">
-        <div class="card-icon"><i class="fa-solid fa-ribbon"></i></div>
-        <h3>Oncology &amp;<br>cancer surgery</h3>
-      </a>
-
-      <a href="#orthopaedic" class="treatment-card card-pink">
-        <div class="card-icon"><i class="fa-solid fa-bone"></i></div>
-        <h3>Orthopaedic &amp;<br>Joint<br>Replacement</h3>
-      </a>
-
-      <!-- Row 3: Centered Blue Cards -->
-      <a href="#gastrointestinal" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-dna"></i></div>
-        <h3>Gastrointestinal<br>Endoscopy</h3>
-      </a>
-
-      <a href="#blood-storage" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-flask"></i></div>
-        <h3>Blood Storage<br>Centre</h3>
-      </a>
-
-      <a href="#physiotherapy" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-person-walking"></i></div>
-        <h3>Physiotherapy</h3>
-      </a>
-
-      <a href="#echo-scan" class="treatment-card card-blue">
-        <div class="card-icon"><i class="fa-solid fa-x-ray"></i></div>
-        <h3>2D Echo &amp; 3D<br>Scan</h3>
-      </a>
-    </div>
-  </section>
-
-</body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Website - Nigdi, Pune</title>
+    <!-- Google Fonts (Poppins) ताकि फॉन्ट साफ दिखें और कटें नहीं -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <!-- FontAwesome Icons सभी आइकन दिखाने के लिए -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    
+    <style>
+        /* सामान्य और मानक स्टाइलिंग */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f4f8fb; /* हल्का मेडिकल ब्लू-ग्रे स्टैंडर्ड बैकग्राउंड */
+            color: #1e293b;
+            line-height: 1.6;
+            overflow-x: hidden; /* टेक्स्ट या पेज कटने से रोकने के लिए */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title span {
+            color: #0d9488;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            color: #0f294a;
+            font-weight: 700;
+            word-wrap: break-word;
+        }
+
+        .section-title p {
+            color: #64748b;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        /* 1. मुख्य डॉक्टर प्रोफाइल सेक्शन (Image 1) */
+        .featured-doctor-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .doc-img-box {
+            flex: 1 1 300px;
+            max-width: 380px;
+        }
+
+        .doc-img-box img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+        }
+
+        .doc-info-box {
+            flex: 2 1 400px;
+        }
+
+        .doc-info-box h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .doc-degree {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .location-badge {
+            display: inline-block;
+            background-color: #cbd5e1;
+            color: #334155;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .doc-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        .doc-details-table td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 15px;
+            word-break: break-word;
+        }
+
+        .doc-details-table td:first-child {
+            font-weight: 600;
+            color: #334155;
+            width: 35%;
+        }
+
+        .doc-details-table td:last-child {
+            color: #475569;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #172554;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #1e3a8a;
+            padding: 12px 25px;
+            border: 1px solid #1e3a8a;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-outline:hover {
+            background-color: #eff6ff;
+        }
+
+        /* 2. सुविधाएं सेक्शन - Facilities (Image 2) */
+        .facilities-section {
+            background-color: #ffffff;
+            padding: 20px 0;
+        }
+
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .facility-item {
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            transition: 0.3s;
+        }
+
+        .facility-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .facility-icon {
+            width: 45px;
+            height: 45px;
+            background-color: #16a34a;
+            color: #ffffff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .facility-item h3 {
+            font-size: 17px;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .facility-item p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* 3. विशेष चिकित्सा सेवाएं - Treatments (Image 3) */
+        .treatments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 20px;
+        }
+
+        .treatment-card {
+            padding: 25px 15px;
+            border-radius: 12px;
+            text-align: center;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+        }
+
+        .treatment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .bg-soft-blue {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .bg-soft-pink {
+            background-color: #ffe4e6;
+            color: #be123c;
+        }
+
+        .treatment-card i {
+            font-size: 32px;
+            margin-bottom: 14px;
+        }
+
+        .treatment-card h4 {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* 4. डॉक्टरों की टीम - Expert Hands (Image 4) */
+        .team-section {
+            background-color: #ffffff;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .team-card {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .dept-pill {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background-color: #f59e0b;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .team-avatar {
+            width: 85px;
+            height: 105px;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .team-details h3 {
+            color: #1d4ed8;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .team-details p {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .team-details p i {
+            margin-top: 4px;
+            color: #1e293b;
+        }
+
+        .btn-book-sm {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 7px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-book-sm:hover {
+            background-color: #1e3a8a;
+        }
+
+        /* 5. हॉस्पिटल इंफ्रास्ट्रक्चर गैलरी (6 Images Section) */
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .infra-card {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .infra-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .infra-caption {
+            padding: 12px 15px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #0f294a;
+            text-align: center;
+        }
+
+        /* 6. पता और गूगल मैप सेक्शन (Address & Map) */
+        .contact-map-section {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
